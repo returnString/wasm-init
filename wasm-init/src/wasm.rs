@@ -1,8 +1,6 @@
 use js_sys::{Array, Function, JsString, Object};
-use std::sync::atomic::AtomicBool;
-use std::sync::atomic::Ordering;
+use std::sync::atomic::{AtomicBool, Ordering};
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsValue;
 
 #[doc(hidden)]
 pub mod __macrodeps {
