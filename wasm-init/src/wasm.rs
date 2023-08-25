@@ -29,10 +29,10 @@ pub fn wasm_init() {
 macro_rules! __wasm_init_impl {
 	($gensym:ident, $($input:tt)*) => {
 		$crate::paste::item! {
-				#[$crate::wasm_bindgen]
-				pub fn [<__wasm_init $gensym>]() {
-					$($input)*
-				}
+			#[$crate::wasm_bindgen]
+			pub fn [<__wasm_init $gensym>]() {
+				$($input)*
+			}
 		}
 	};
 }
