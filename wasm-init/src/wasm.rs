@@ -1,15 +1,30 @@
 use js_sys::{Array, Function, JsString, Object};
+use std::sync::atomic::AtomicBool;
+use std::sync::atomic::Ordering;
+use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
 
 #[doc(hidden)]
-pub use gensym::gensym;
-#[doc(hidden)]
-pub use paste;
-#[doc(hidden)]
-pub use wasm_bindgen::prelude::wasm_bindgen;
+pub mod __macrodeps {
+	pub use gensym::gensym;
+	pub use paste::item;
+	pub use wasm_bindgen::prelude::wasm_bindgen;
+}
+
+static INIT_DONE: AtomicBool = AtomicBool::new(false);
+
+#[cfg(feature = "auto-init")]
+#[wasm_bindgen(start)]
+fn main() {
+	wasm_init();
+}
 
 #[wasm_bindgen]
 pub fn wasm_init() {
+	if INIT_DONE.swap(true, Ordering::Relaxed) {
+		return;
+	};
+
 	let exports: Object = wasm_bindgen::exports().into();
 	let entries = Object::entries(&exports);
 	for entry in entries {
@@ -28,8 +43,8 @@ pub fn wasm_init() {
 #[macro_export]
 macro_rules! __wasm_init_impl {
 	($gensym:ident, $($input:tt)*) => {
-		$crate::paste::item! {
-			#[$crate::wasm_bindgen]
+		$crate::__macrodeps::item! {
+			#[$crate::__macrodeps::wasm_bindgen]
 			pub fn [<__wasm_init $gensym>]() {
 				$($input)*
 			}
@@ -40,6 +55,6 @@ macro_rules! __wasm_init_impl {
 #[macro_export]
 macro_rules! wasm_init {
 	($($input:tt)*) => {
-		$crate::gensym! { $crate::__wasm_init_impl! { $($input)* } }
+		$crate::__macrodeps::gensym! { $crate::__wasm_init_impl! { $($input)* } }
 	};
 }

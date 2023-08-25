@@ -7,5 +7,5 @@ edition = "2021"
 crate-type = [ "cdylib", "rlib" ]
 
 [dependencies]
-wasm-init = { path = "../wasm-init" }
+wasm-init = { path = "../wasm-init", features = [ "auto-init" ] }
 wasm-bindgen = "0.2"
