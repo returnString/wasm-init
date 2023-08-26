@@ -1,4 +1,5 @@
-![Crates.io](https://img.shields.io/crates/v/wasm-init)
+[<img src="https://img.shields.io/crates/v/wasm-init">](https://crates.io/crates/wasm-init)
+[<img src="https://img.shields.io/badge/docs.rs-wasm--init-green">](https://docs.rs/wasm-init)
 
 Let's pretend that life-before-main exists for Rust targeting WebAssembly.
 

@@ -17,6 +17,15 @@ fn main() {
 	wasm_init();
 }
 
+/// This function will call all instances of [`crate::wasm_init!`].
+///
+/// This function can be called either:
+/// - from Rust as part of an entrypoint
+/// - from JavaScript/TypeScript by calling the exported `wasm_init` function in your module
+/// - automatically, by enabling the "auto-init" feature
+///
+/// This function is idempotent, or safe to call multiple times;
+/// your [`crate::wasm_init!`] calls will only be executed once.
 #[wasm_bindgen]
 pub fn wasm_init() {
 	if INIT_DONE.swap(true, Ordering::Relaxed) {
@@ -50,6 +59,34 @@ macro_rules! __wasm_init_impl {
 	};
 }
 
+/// Register code to be run on start-up.
+///
+/// Each call to this macro will generate a function that will be called exactly once,
+/// after the [wasm_init] function is called for the first time.
+///
+/// You can register code from as many different crates in your project as you'd like;
+/// [wasm_init] only needs to be called once.
+///
+/// # Examples
+/// ```
+/// trait Plugin {}
+///
+/// fn register_plugin(plugin: impl Plugin) {
+/// 	// grab data from each plugin and store them in a global somewhere
+/// }
+///
+/// struct Plugin1;
+///
+/// wasm_init::wasm_init! {
+/// 	register_plugin(Plugin1);
+/// }
+///
+/// struct Plugin2;
+///
+/// wasm_init::wasm_init! {
+/// 	register_plugin(Plugin2);
+/// }
+/// ```
 #[macro_export]
 macro_rules! wasm_init {
 	($($input:tt)*) => {
