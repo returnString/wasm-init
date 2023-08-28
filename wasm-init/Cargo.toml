@@ -1,6 +1,6 @@
 [package]
 name = "wasm-init"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 authors = [ "Ruan Pearce-Authers <ruanpa@outlook.com>" ]
 description = "Let's pretend that life-before-main exists for Rust targeting WebAssembly"
