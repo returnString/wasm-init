@@ -5,8 +5,7 @@ use wasm_bindgen::prelude::*;
 #[doc(hidden)]
 pub mod __macrodeps {
 	pub use gensym::gensym;
-	pub use paste::item;
-	pub use wasm_bindgen::prelude::wasm_bindgen;
+	pub use std::{concat, stringify};
 }
 
 static INIT_DONE: AtomicBool = AtomicBool::new(false);
@@ -50,12 +49,15 @@ pub fn wasm_init() {
 #[macro_export]
 macro_rules! __wasm_init_impl {
 	($gensym:ident, $($input:tt)*) => {
-		$crate::__macrodeps::item! {
-			#[$crate::__macrodeps::wasm_bindgen]
-			pub fn [<__wasm_init $gensym>]() {
+		const _: () = {
+			#[export_name = $crate::__macrodeps::concat!(
+				"__wasm_init",
+				$crate::__macrodeps::stringify!($gensym)
+			)]
+			pub extern "C" fn init() {
 				$($input)*
 			}
-		}
+		};
 	};
 }
 
